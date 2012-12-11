@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-number = 9
+number = 19
 tables = dict.fromkeys(range(20), 0)
 fires = dict.fromkeys(range(8), 0)
 peoples = dict.fromkeys(range(number), 0)
@@ -14,9 +14,9 @@ p_ready_to_fire = 0
 p_fire_ing = 0
 p_fire_done = 0
 
- 
+flag = 0 
 def dis_table2():
-    global p_table_img, p_ready_to_fire, peoples
+    global p_table_img, p_ready_to_fire, peoples, flag
     if peoples.__len__():
         peoples_tmp = peoples.copy()
         for people_id, people_status in peoples_tmp.iteritems():
@@ -28,6 +28,8 @@ def dis_table2():
                 if people_status == 5:
                     p_ready_to_fire +=1
                     peoples.pop(people_id)
+    else:
+        flag = 1
     return p_ready_to_fire
 
 def dis_fire():
@@ -67,11 +69,13 @@ def test(i,p_interval = 0,p_have = 0):
                     #p_need_to_table += 1
                     #print p_need_to_table,'fansfashfas'
         #else:
+        if flag:
+            print n
         dis_table2()
         dis_fire()
 
 def result(p_interval = 0,p_have = 0):
-    global peoples, p_need_to_table
+    global peoples, p_need_to_table, flag
     if p_interval:
         print p_interval,'p_interval'
         peoples = {}
@@ -89,13 +93,14 @@ def result(p_interval = 0,p_have = 0):
                     #p_need_to_table += 1
                     #print p_need_to_table,'fansfashfas'
         #else:
-        dis_table2()
+        if not flag:
+            dis_table2()
         dis_fire()
         n += 1
     return n
 
 
-test(5+19,1)
+#test(5+18,6)
 #n = result(1)
 #print n
 print p_ready_to_fire,'to fire'
