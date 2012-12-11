@@ -2,7 +2,6 @@
 '''
 使用有限元的思想，对时间进行细分
 把时间每10s作为一个单元进行分配
-=======================
 分配分为两部分：
 A：      dis_table2      分配吧台
 B：      dis_fire        分配烧烤架
@@ -23,6 +22,8 @@ p_table_img = 0
 p_ready_to_fire = 0
 #正在进行烧烤的人数
 p_fire_ing = 0
+#吧台获取5种食材结束的人数
+p_table_done = 0
 #烧烤结束的人数
 p_fire_done = 0
 #吧台使用结束的标志位
@@ -31,12 +32,12 @@ flag_end_table = 0
 time_total_table = 0
 #在烧烤架等待的时间
 time_wait_fire = 0
-
+ttt = 0
 def dis_table2():
     '''
     根据需要选取食材的人(peoples)来随机分配吧台选取5中食材
     '''
-    global p_table_img, p_ready_to_fire, peoples, flag_end_table
+    global p_table_img, p_ready_to_fire, peoples, flag_end_table, p_table_done, ttt
     if peoples.__len__():
         peoples_tmp = peoples.copy()
         for people_id, people_status in peoples_tmp.iteritems():
@@ -49,8 +50,10 @@ def dis_table2():
                     p_ready_to_fire +=1
                     p_table_img -= 1
                     peoples.pop(people_id)
+                    p_table_done += 1
     else:
-        flag_end_table = 1
+        if p_table_done == number:
+            flag_end_table = 1
 
 def dis_fire():
     '''
@@ -81,11 +84,14 @@ def output_form(total_time, people_count, interval_b_p):
     time_av = total_time - (people_count - 1) * interval_b_p
     time_av = time_av * 10.0 / people_count 
     
-    time_av 
-    print "有%s个顾客，两两相距时间为%s分钟时，\
-            平均每位顾客的餐食准备时间为%s秒" %(people_count, interval_b_p, time_av),
-    print "顾客在烧烤架的平均等待时间为%s秒" % time_av_table
+    time_av_fire = time_wait_fire * 10.0 / people_count 
     
+    time_av_table = ((time_total_table - 1 ) - (people_count - 1) * interval_b_p - 5)
+    time_av_table = time_av_table * 10.0 / people_count 
+    interval_b_p = interval_b_p / 6.0
+    print "有%s个顾客，两两相距时间为%s分钟时,平均每位顾客的餐食准备时间为%s秒" %(people_count, interval_b_p, time_av)
+    print "顾客在烧烤架的平均等待时间为%s秒" % time_av_fire
+    print "顾客在吧台的平均等待时间为%s秒" % time_av_table
      
 def test(i,p_interval = 0):
     global peoples, p_need_to_table
@@ -111,7 +117,6 @@ def result(p_interval = 0):
         peoples = {}
     else:
         peoples = dict.fromkeys(range(number), 0)
-        p_need_to_table = number
     n = 0
     while p_fire_done < number:
         if p_interval:
@@ -119,19 +124,23 @@ def result(p_interval = 0):
                 p_have = n // p_interval
                 if p_have < number:
                     peoples[p_have] = 0
+            #print peoples
         if not flag_end_table:
+            #print 122222222222222222222222
             dis_table2()
             time_total_table = n
         dis_fire()
         n += 1
     return n
 
-number = 21
+number = 2
 interval = 0
-#test(226,0)
+#test(226,12)
 n = result(interval)
 
+output_form(n, number, interval)
 print n
+
 print time_total_table, 'time_total_table'
 print time_wait_fire, 'time_wait_fire '
 print p_ready_to_fire,'to fire'
