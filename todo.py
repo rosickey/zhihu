@@ -9,6 +9,8 @@ B：      dis_fire        分配烧烤架
 '''
 #就餐人数
 number = 2
+#两人之间的时间间隔
+interval = 0
 #20个吧台，不使用时状态位为 0
 tables = dict.fromkeys(range(20), 0)
 #烧烤架可同时烧烤8个人，使用时状态位为 0
@@ -45,13 +47,16 @@ def dis_table2():
                 peoples[people_id] += 1
                 if people_status == 5:
                     p_ready_to_fire +=1
+                    p_table_img -= 1
                     peoples.pop(people_id)
     else:
-        #
         flag_end_table = 1
-    return p_ready_to_fire
 
 def dis_fire():
+    '''
+    把1个烧烤架看成8个单独使用的烧烤架(fires )
+    选取好食材的人(p_ready_to_fire)，随机分配可以使用的烧烤架(fire_status ==0)
+    '''
     global p_fire_ing, p_fire_done, p_ready_to_fire, fires, time_wait_fire
     if p_ready_to_fire > 8 - p_fire_ing:
         time_wait_fire += p_ready_to_fire - (8 - p_fire_ing)
@@ -70,8 +75,18 @@ def dis_fire():
                 
 def time_form(n):
     return n//6, (n%6) * 10
-        
-#每10s分配一次
+    
+def output_form(total_time, people_count, interval_b_p):
+    
+    time_av = total_time - (people_count - 1) * interval_b_p
+    time_av = time_av * 10.0 / people_count 
+    
+    time_av 
+    print "有%s个顾客，两两相距时间为%s分钟时，\
+            平均每位顾客的餐食准备时间为%s秒" %(people_count, interval_b_p, time_av),
+    print "顾客在烧烤架的平均等待时间为%s秒" % time_av_table
+    
+     
 def test(i,p_interval = 0):
     global peoples, p_need_to_table
     if p_interval:
@@ -85,15 +100,14 @@ def test(i,p_interval = 0):
                 p_have = n // p_interval
                 if p_have < number:
                     peoples[p_have] = 0
-        if flag:
+        if flag_end_table:
             print n
         dis_table2()
         dis_fire()
 
-def result(p_interval = 0,p_have = 0):
+def result(p_interval = 0):
     global peoples, p_need_to_table, flag_end_table, time_total_table
     if p_interval:
-        print p_interval,'p_interval'
         peoples = {}
     else:
         peoples = dict.fromkeys(range(number), 0)
@@ -112,10 +126,11 @@ def result(p_interval = 0,p_have = 0):
         n += 1
     return n
 
+number = 21
+interval = 0
+#test(226,0)
+n = result(interval)
 
-#test(5+18,6)
-number = 9
-n = result()
 print n
 print time_total_table, 'time_total_table'
 print time_wait_fire, 'time_wait_fire '
