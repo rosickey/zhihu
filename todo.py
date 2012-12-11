@@ -41,6 +41,7 @@ def dis_table2():
     if peoples.__len__():
         peoples_tmp = peoples.copy()
         for people_id, people_status in peoples_tmp.iteritems():
+            ttt += 1
             if people_status == 0 and p_table_img < 20:
                 p_table_img += 1
                 peoples[people_id] += 1
@@ -60,17 +61,21 @@ def dis_fire():
     把1个烧烤架看成8个单独使用的烧烤架(fires )
     选取好食材的人(p_ready_to_fire)，随机分配可以使用的烧烤架(fire_status ==0)
     '''
-    global p_fire_ing, p_fire_done, p_ready_to_fire, fires, time_wait_fire
+    global p_fire_ing, p_fire_done, p_ready_to_fire, fires, time_wait_fire, ttt
     if p_ready_to_fire > 8 - p_fire_ing:
         time_wait_fire += p_ready_to_fire - (8 - p_fire_ing)
+    ttt += (p_ready_to_fire + p_fire_ing)
     for fire_id, fire_status in fires.iteritems():
         if fire_status == 0:
             if p_ready_to_fire > 0 :
                 p_fire_ing += 1
+                
                 p_ready_to_fire -= 1
                 fires[fire_id] += 1
+                
         if fire_status:
             fires[fire_id] +=1
+            
             if fires[fire_id] == 3* 6:
                 fires[fire_id] = 0
                 p_fire_done += 1
@@ -81,8 +86,8 @@ def time_form(n):
     
 def output_form(total_time, people_count, interval_b_p):
     
-    time_av = total_time - (people_count - 1) * interval_b_p
-    time_av = time_av * 10.0 / people_count 
+    #time_av = total_time - (people_count - 1) * interval_b_p
+    time_av = (ttt - people_count)  * 10.0 / people_count 
     
     time_av_fire = time_wait_fire * 10.0 / people_count 
     
@@ -133,8 +138,8 @@ def result(p_interval = 0):
         n += 1
     return n
 
-number = 2
-interval = 0
+number = 21
+interval = 12
 #test(226,12)
 n = result(interval)
 
