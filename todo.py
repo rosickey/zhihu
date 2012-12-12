@@ -124,6 +124,6 @@ def output_form(people_count, interval_b_p):
 #100名顾客
 number = 100
 #两两相距2分钟
-interval = 6
+interval = 12
 result(interval)
 output_form(number, interval)
