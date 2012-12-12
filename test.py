@@ -120,11 +120,13 @@ def result(p_interval = 0):
     return n
 
 def output_form(people_count, interval_b_p):
-    #平均
+    #所有人等待+取食材+加烧烤的时间为time_total - people_count
     time_av = (time_total - people_count)  * 10.0 / people_count 
-    
+    #所有人在烧烤架等待的时间为time_wait_fire
     time_av_fire = time_wait_fire * 10.0 / people_count 
-    
+    #吧台从开始到结束使用的时间为time_total_table - 1
+    #其中包含两人之间的间隔时间(people_count - 1) * interval_b_p
+    #原则上，不排队等待，在吧台耗费的平均时间为5
     time_av_table = ((time_total_table - 1 ) - (people_count - 1) * interval_b_p - 5)
     time_av_table = time_av_table * 10.0 / people_count 
     interval_b_p = interval_b_p / 6.0
@@ -132,7 +134,6 @@ def output_form(people_count, interval_b_p):
     print "顾客在烧烤架的平均等待时间为%s秒" % time_av_fire
     print "顾客在吧台的平均等待时间为%s秒" % time_av_table
     
-
 
 number = 2
 interval = 0
